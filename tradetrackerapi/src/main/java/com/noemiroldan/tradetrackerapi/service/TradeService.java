@@ -5,5 +5,5 @@ import com.noemiroldan.tradetrackerapi.dto.response.TradeResponseDto;
 
 public interface TradeService {
     TradeResponseDto getTradeById(Integer id);
-    TradeResponseDto createTrade(TradeRequestDto tradeRequest);
+    TradeResponseDto createTrade(TradeRequestDto request);
 }

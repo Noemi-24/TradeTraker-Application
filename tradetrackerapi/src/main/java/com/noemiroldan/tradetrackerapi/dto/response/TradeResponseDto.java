@@ -17,5 +17,6 @@ public class TradeResponseDto {
     BigDecimal amount;
     Currency currency;
     TradeStatus status;
+    Integer counterpartyId;
     String counterpartyName;
 }

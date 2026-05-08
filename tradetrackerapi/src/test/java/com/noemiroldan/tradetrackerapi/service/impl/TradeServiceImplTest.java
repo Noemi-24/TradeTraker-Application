@@ -1,12 +1,13 @@
 package com.noemiroldan.tradetrackerapi.service.impl;
 
+import com.noemiroldan.tradetrackerapi.dto.request.TradeRequestDto;
 import com.noemiroldan.tradetrackerapi.dto.response.TradeResponseDto;
 import com.noemiroldan.tradetrackerapi.entity.Counterparty;
 import com.noemiroldan.tradetrackerapi.entity.Trade;
 import com.noemiroldan.tradetrackerapi.enums.*;
 import com.noemiroldan.tradetrackerapi.mapper.TradeMapper;
+import com.noemiroldan.tradetrackerapi.repository.CounterpartyRepository;
 import com.noemiroldan.tradetrackerapi.repository.TradeRepository;
-import com.noemiroldan.tradetrackerapi.service.TradeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,9 @@ class TradeServiceImplTest {
 
     @Mock
     private TradeRepository tradeRepository;
+
+    @Mock
+    private CounterpartyRepository counterpartyRepository;
 
     @Mock
     private TradeMapper tradeMapper;
@@ -52,7 +56,7 @@ class TradeServiceImplTest {
 
         Trade trade = new Trade();
         trade.setTradeId(1);
-        trade.setCounterpartyId(counterparty);
+        trade.setCounterparty(counterparty);
         trade.setAssetType(AssetType.BOND);
         trade.setAmount(BigDecimal.valueOf(100));
         trade.setCurrency(Currency.USD);
@@ -74,6 +78,109 @@ class TradeServiceImplTest {
     }
 
     @Test
-    void createTrade() {
+    void createTrade_Success() {
+        // ARRANGE
+        Counterparty counterparty = new Counterparty();
+        counterparty.setName("counterpartyName");
+        counterparty.setCounterpartyId(1);
+        counterparty.setCountry(Country.USA);
+        counterparty.setRiskRating(RiskRating.LOW);
+
+        TradeRequestDto request = new TradeRequestDto();
+        request.setAssetType(AssetType.BOND);
+        request.setAmount(BigDecimal.valueOf(100));
+        request.setCurrency(Currency.USD);
+        request.setTradeDate(LocalDate.of(2026, 1, 1));
+        request.setSettlementDate(LocalDate.of(2026, 1, 1));
+        request.setCounterpartyId(counterparty.getCounterpartyId());
+
+        Trade trade = new Trade();
+        trade.setTradeId(1);
+        trade.setCounterparty(counterparty);
+        trade.setAssetType(AssetType.BOND);
+        trade.setAmount(BigDecimal.valueOf(100));
+        trade.setCurrency(Currency.USD);
+        trade.setStatus(TradeStatus.PENDING);
+        trade.setTradeDate(LocalDate.of(2026, 1, 1));
+        trade.setSettlementDate(LocalDate.of(2026, 1, 1));
+
+        Trade savedTrade = new Trade();
+        savedTrade.setTradeId(1);
+        savedTrade.setCounterparty(counterparty);
+        savedTrade.setAssetType(AssetType.BOND);
+        savedTrade.setAmount(BigDecimal.valueOf(100));
+        savedTrade.setCurrency(Currency.USD);
+        savedTrade.setStatus(TradeStatus.PENDING);
+        savedTrade.setTradeDate(LocalDate.of(2026, 1, 1));
+        savedTrade.setSettlementDate(LocalDate.of(2026, 1, 1));
+
+
+        TradeResponseDto response = new TradeResponseDto();
+        response.setTradeId(1);
+        response.setCounterpartyId(counterparty.getCounterpartyId());
+        response.setCounterpartyName(counterparty.getName());
+        response.setAssetType(AssetType.BOND);
+        response.setAmount(BigDecimal.valueOf(100));
+        response.setCurrency(Currency.USD);
+        response.setStatus(TradeStatus.PENDING);
+
+        when(counterpartyRepository.findById(request.getCounterpartyId())).thenReturn(Optional.of(counterparty));
+        when(tradeMapper.toTrade(request, counterparty)).thenReturn(trade);
+        when(tradeRepository.save(trade)).thenReturn(savedTrade);
+        when(tradeMapper.toTradeResponseDto(savedTrade)).thenReturn(response);
+
+
+        // ACT
+        TradeResponseDto result = tradeServiceImpl.createTrade(request);
+
+        // ASSERT & VERIFY
+        assertNotNull(result);
+        assertEquals(response, result);
+        verify(tradeRepository).save(trade);
+        verify(counterpartyRepository).findById(request.getCounterpartyId());
+    }
+    @Test
+    void createTrade_ShouldReturnPendingStatus_WhenTradeIsCreated() {
+        // ARRANGE
+        Counterparty counterparty = new Counterparty();
+        counterparty.setName("counterpartyName");
+        counterparty.setCounterpartyId(1);
+        counterparty.setCountry(Country.USA);
+        counterparty.setRiskRating(RiskRating.LOW);
+
+        TradeRequestDto request = new TradeRequestDto();
+        request.setAssetType(AssetType.BOND);
+        request.setAmount(BigDecimal.valueOf(100));
+        request.setCurrency(Currency.USD);
+        request.setTradeDate(LocalDate.of(2026, 1, 1));
+        request.setSettlementDate(LocalDate.of(2026, 1, 1));
+        request.setCounterpartyId(counterparty.getCounterpartyId());
+
+        Trade trade = new Trade();
+        trade.setTradeId(1);
+        trade.setCounterparty(counterparty);
+        trade.setStatus(TradeStatus.PENDING);
+
+        Trade savedTrade = new Trade();
+        savedTrade.setTradeId(1);
+        savedTrade.setCounterparty(counterparty);
+        savedTrade.setStatus(TradeStatus.PENDING);
+
+        TradeResponseDto response = new TradeResponseDto();
+        response.setTradeId(1);
+        response.setCounterpartyId(counterparty.getCounterpartyId());
+        response.setStatus(TradeStatus.PENDING);
+
+        when(counterpartyRepository.findById(request.getCounterpartyId())).thenReturn(Optional.of(counterparty));
+        when(tradeMapper.toTrade(request, counterparty)).thenReturn(trade);
+        when(tradeRepository.save(trade)).thenReturn(savedTrade);
+        when(tradeMapper.toTradeResponseDto(savedTrade)).thenReturn(response);
+
+        // ACT
+        TradeResponseDto result = tradeServiceImpl.createTrade(request);
+
+        // ASSERT & VERIFY
+        assertNotNull(result);
+        assertEquals(TradeStatus.PENDING, result.getStatus());
     }
 }

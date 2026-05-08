@@ -26,7 +26,7 @@ public class SettlementIssue {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trade_id")
-    Trade tradeId;
+    Trade trade;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reason_code")

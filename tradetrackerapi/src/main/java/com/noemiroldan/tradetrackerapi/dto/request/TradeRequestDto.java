@@ -6,7 +6,6 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
@@ -17,10 +16,10 @@ import java.time.LocalDate;
 public class TradeRequestDto {
     AssetType assetType;
 
-    @NonNull
+    @NotNull
     LocalDate tradeDate;
 
-    @NonNull
+    @NotNull
     LocalDate settlementDate;
 
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")

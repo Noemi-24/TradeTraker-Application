@@ -26,17 +26,17 @@ public class Trade {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "counterparty_id")
-    Counterparty counterpartyId;
+    Counterparty counterparty;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "asset_type")
     AssetType assetType;
 
-    @NonNull
+    @NotNull
     @Column(name = "trade_date")
     LocalDate tradeDate;
 
-    @NonNull
+    @NotNull
     @Column(name = "settlement_date")
     LocalDate settlementDate;
 
@@ -50,6 +50,6 @@ public class Trade {
     Currency currency;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "default 'PENDING'")
     TradeStatus status;
 }
