@@ -25,6 +25,7 @@ public class CounterpartyMapper {
 
         counterparty.setCountry(request.getCountry());
         counterparty.setName(request.getName());
+        counterparty.setRiskRating(request.getRiskRating());
 
         return counterparty;
     }

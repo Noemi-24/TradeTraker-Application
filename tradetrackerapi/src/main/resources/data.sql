@@ -3,16 +3,15 @@
 -- =========================
 
 INSERT INTO counterparty (
-    counterparty_id,
     name,
     country,
     risk_rating
 ) VALUES
-      (1, 'JPMorgan Chase', 'USA', 'LOW'),
+      ('JPMorgan Chase', 'USA', 'LOW'),
 
-      (2, 'Goldman Sachs', 'USA', 'MEDIUM'),
+      ('Goldman Sachs', 'USA', 'MEDIUM'),
 
-      (3, 'Morgan Stanley', 'UK', 'HIGH');
+      ('Morgan Stanley', 'UK', 'HIGH');
 
 
 
@@ -21,7 +20,6 @@ INSERT INTO counterparty (
 -- =========================
 
 INSERT INTO trade (
-    trade_id,
     asset_type,
     trade_date,
     settlement_date,
@@ -31,7 +29,6 @@ INSERT INTO trade (
     counterparty_id
 ) VALUES
       (
-          1001,
           'EQUITY',
           '2026-05-06',
           '2026-05-08',
@@ -42,7 +39,6 @@ INSERT INTO trade (
       ),
 
       (
-          1002,
           'FOREX',
           '2026-05-05',
           '2026-05-07',
@@ -53,7 +49,6 @@ INSERT INTO trade (
       ),
 
       (
-          1003,
           'BOND',
           '2026-05-01',
           '2026-05-03',
@@ -70,7 +65,6 @@ INSERT INTO trade (
 -- =========================
 
 INSERT INTO settlement_issue (
-    settlement_id,
     trade_id,
     reason_code,
     description,
@@ -79,8 +73,7 @@ INSERT INTO settlement_issue (
     resolved
 ) VALUES
       (
-          5001,
-          1002,
+          1,
           'INSUFFICIENT_FUNDS',
           'Counterparty account balance was insufficient for settlement.',
           'HIGH',
@@ -89,8 +82,7 @@ INSERT INTO settlement_issue (
       ),
 
       (
-          5002,
-          1002,
+          2,
           'MISSING_REFERENCE_DATA',
           'SWIFT code missing from settlement instructions.',
           'MEDIUM',
