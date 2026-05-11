@@ -5,6 +5,7 @@ import com.noemiroldan.tradetrackerapi.dto.response.TradeResponseDto;
 import com.noemiroldan.tradetrackerapi.entity.Counterparty;
 import com.noemiroldan.tradetrackerapi.entity.Trade;
 import com.noemiroldan.tradetrackerapi.enums.*;
+import com.noemiroldan.tradetrackerapi.exception.BadRequestException;
 import com.noemiroldan.tradetrackerapi.mapper.TradeMapper;
 import com.noemiroldan.tradetrackerapi.repository.CounterpartyRepository;
 import com.noemiroldan.tradetrackerapi.repository.TradeRepository;
@@ -19,8 +20,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TradeServiceImplTest {
@@ -182,5 +182,59 @@ class TradeServiceImplTest {
         // ASSERT & VERIFY
         assertNotNull(result);
         assertEquals(TradeStatus.PENDING, result.getStatus());
+    }
+
+    @Test
+    void createTrade_ShouldThrowException_WhenAmountIsNotPositive(){
+        // ARRANGE
+        Counterparty counterparty = new Counterparty();
+        counterparty.setCounterpartyId(1);
+
+        TradeRequestDto request = new TradeRequestDto();
+        request.setAssetType(AssetType.BOND);
+        request.setAmount(BigDecimal.valueOf(-1));
+        request.setCurrency(Currency.USD);
+        request.setTradeDate(LocalDate.of(2026, 1, 1));
+        request.setSettlementDate(LocalDate.of(2026, 1, 1));
+        request.setCounterpartyId(counterparty.getCounterpartyId());
+
+        // ACT & ASSERT
+        assertThrows(BadRequestException.class, () -> {
+            tradeServiceImpl.createTrade(request);
+        });
+
+        // VERIFY
+        verify(tradeRepository, never()).save(any());
+        verify(tradeMapper, never()).toTradeResponseDto(any());
+        verify(tradeMapper, never()).toTrade(any(), any());
+        verify(counterpartyRepository, never()).findById(any());
+
+    }
+
+    @Test
+    void createTrade_ShouldThrowException_WhenSettlementDateIsBeforeTradeDate(){
+        // ARRANGE
+        Counterparty counterparty = new Counterparty();
+        counterparty.setCounterpartyId(1);
+
+        TradeRequestDto request = new TradeRequestDto();
+        request.setAssetType(AssetType.BOND);
+        request.setAmount(BigDecimal.valueOf(100));
+        request.setCurrency(Currency.USD);
+        request.setTradeDate(LocalDate.of(2026, 1, 2));
+        request.setSettlementDate(LocalDate.of(2026, 1, 1));
+        request.setCounterpartyId(counterparty.getCounterpartyId());
+
+        // ACT & ASSERT
+        assertThrows(BadRequestException.class, () -> {
+            tradeServiceImpl.createTrade(request);
+        });
+
+        // VERIFY
+        verify(tradeRepository, never()).save(any());
+        verify(tradeMapper, never()).toTradeResponseDto(any());
+        verify(tradeMapper, never()).toTrade(any(), any());
+        verify(counterpartyRepository, never()).findById(any());
+
     }
 }

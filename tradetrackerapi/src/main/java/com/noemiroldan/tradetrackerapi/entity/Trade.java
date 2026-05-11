@@ -50,6 +50,6 @@ public class Trade {
     Currency currency;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "default 'PENDING'")
-    TradeStatus status;
+    @Column(name = "status")
+    TradeStatus status = TradeStatus.PENDING;
 }
