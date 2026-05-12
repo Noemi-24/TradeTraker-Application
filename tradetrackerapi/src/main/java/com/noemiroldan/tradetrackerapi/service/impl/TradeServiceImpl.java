@@ -72,6 +72,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public List<TradeResponseDto> getAllTrades() {
+        logger.info("Fetching all trades");
         return tradeRepository.findAll()
                 .stream()
                 .map(tradeMapper::toTradeResponseDto)
@@ -80,6 +81,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public List<TradeResponseDto> findByStatus(TradeStatus status) {
+        logger.info("Fetching trades for status {}", status);
         return tradeRepository.findByStatus(status)
                 .stream()
                 .map(tradeMapper::toTradeResponseDto)

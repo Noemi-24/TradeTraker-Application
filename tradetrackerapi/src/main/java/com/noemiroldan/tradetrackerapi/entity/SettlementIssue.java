@@ -43,5 +43,5 @@ public class SettlementIssue {
     LocalDateTime createdAt;
 
     @Column(name = "resolved")
-    Boolean resolved;
+    Boolean resolved = false;
 }
