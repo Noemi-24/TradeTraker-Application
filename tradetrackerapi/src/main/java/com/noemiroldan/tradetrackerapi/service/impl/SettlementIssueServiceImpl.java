@@ -26,12 +26,12 @@ public class SettlementIssueServiceImpl implements SettlementIssueService {
 
 
     @Override
-    public SettlementIssueResponseDto updateSettlementIssue(Integer id) {
-        logger.info("Fetching settlement issue with ID: {}", id);
-        SettlementIssue settlementIssue = settlementIssueRepository.findById(id)
+    public SettlementIssueResponseDto resolveSettlementIssue(Integer settlementIssueId) {
+        logger.info("Fetching settlement issue with ID: {}", settlementIssueId);
+        SettlementIssue settlementIssue = settlementIssueRepository.findById(settlementIssueId)
                 .orElseThrow(()-> {
-                    logger.warn("SettlementIssue not found with ID: {}", id );
-                    return new ResourceNotFoundException("SettlementIssue", "id", id);
+                    logger.warn("SettlementIssue not found with ID: {}", settlementIssueId );
+                    return new ResourceNotFoundException("SettlementIssue", "id", settlementIssueId);
                 });
 
         settlementIssue.setResolved(true);

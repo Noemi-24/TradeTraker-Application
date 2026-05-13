@@ -20,14 +20,14 @@ public class CounterpartyServiceImpl implements CounterpartyService {
     private static final Logger logger = LoggerFactory.getLogger(CounterpartyServiceImpl.class);
 
     @Override
-    public CounterpartyResponseDto getCounterpartyById(Integer id) {
-        logger.info("Fetching counterparty with ID: {}", id);
-        Counterparty counterparty = counterpartyRepository.findById(id)
+    public CounterpartyResponseDto getCounterpartyById(Integer counterpartyId) {
+        logger.info("Fetching counterparty with ID: {}", counterpartyId);
+        Counterparty counterparty = counterpartyRepository.findById(counterpartyId)
                 .orElseThrow(()->{
-                    logger.warn("Counterparty not found with ID: {}", id);
-                    return new ResourceNotFoundException("Counterparty", "id", id);
+                    logger.warn("Counterparty not found with ID: {}", counterpartyId);
+                    return new ResourceNotFoundException("Counterparty", "id", counterpartyId);
                 });
-        logger.info("Counterparty found with ID: {}", id);
+        logger.info("Counterparty found with ID: {}", counterpartyId);
         return counterpartyMapper.toCounterpartyResponseDto(counterparty);
     }
 

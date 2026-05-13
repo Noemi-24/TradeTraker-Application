@@ -4,6 +4,6 @@ import com.noemiroldan.tradetrackerapi.dto.request.CounterpartyRequestDto;
 import com.noemiroldan.tradetrackerapi.dto.response.CounterpartyResponseDto;
 
 public interface CounterpartyService {
-    CounterpartyResponseDto getCounterpartyById(Integer id);
+    CounterpartyResponseDto getCounterpartyById(Integer counterpartyId);
     CounterpartyResponseDto createCounterparty(CounterpartyRequestDto request);
 }

@@ -19,9 +19,9 @@ public class SettlementIssueController {
         return ResponseEntity.ok(settlementIssueService.findByResolved(resolved));
     }
 
-    @PatchMapping("/{id}/resolve")
-    public ResponseEntity<SettlementIssueResponseDto> updateSettlementIssue(@PathVariable Integer id) {
-        SettlementIssueResponseDto responseDto = settlementIssueService.updateSettlementIssue(id);
+    @PatchMapping("/{settlementIssueId}/resolve")
+    public ResponseEntity<SettlementIssueResponseDto> resolveSettlementIssue(@PathVariable Integer settlementIssueId) {
+        SettlementIssueResponseDto responseDto = settlementIssueService.resolveSettlementIssue(settlementIssueId);
         return ResponseEntity.ok(responseDto);
     }
 }

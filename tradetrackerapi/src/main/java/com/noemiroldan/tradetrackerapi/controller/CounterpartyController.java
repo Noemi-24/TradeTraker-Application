@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class CounterpartyController {
     public final CounterpartyService counterpartyService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CounterpartyResponseDto> getCounterpartyById(@PathVariable Integer id){
-        return ResponseEntity.ok(counterpartyService.getCounterpartyById(id));
+    @GetMapping("/{counterpartyId}")
+    public ResponseEntity<CounterpartyResponseDto> getCounterpartyById(@PathVariable Integer counterpartyId){
+        return ResponseEntity.ok(counterpartyService.getCounterpartyById(counterpartyId));
     }
 
     @PostMapping
