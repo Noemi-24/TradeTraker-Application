@@ -6,9 +6,9 @@ export interface Column<T> {
 }
 
 interface TableProps<T> {
-    data: T[];
-    columns: Column<T>[];
-    rowKey: (item: T) => string | number;
+    readonly data: T[];
+    readonly columns: Column<T>[];
+    readonly rowKey: (item: T) => string | number;
 }
 
 export const Table = <T, >({ data, columns, rowKey }: TableProps<T>) => {
@@ -26,23 +26,31 @@ export const Table = <T, >({ data, columns, rowKey }: TableProps<T>) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, rowIndex) => (
-                    <tr key={rowKey(item)}
-                        className={`border-b border-gray-200 ${
-                            rowIndex % 2 === 0 
-                            ? 'bg-white' 
-                            : 'bg-gray-50'
-                        }
-                        transition-colors duration-150 hover:bg-blue-50`}>
-                        {columns.map((col) => (
-                        <td key={col.header} 
-                            className="px-4 sm:px-6 py-4 text-gray-700 whitespace-nowrap">
-                            {col.render(item)}
-                        </td>
-                        ))}
-                    </tr>
-                    ))}
-                </tbody>
+                    {data.length > 0 ? (
+                        data.map((item, rowIndex) => (
+                        <tr key={rowKey(item)}
+                            className={`border-b border-gray-200 ${
+                                rowIndex % 2 === 0 
+                                ? 'bg-white' 
+                                : 'bg-gray-50'
+                            }
+                            transition-colors duration-150 hover:bg-blue-50`}>
+                            {columns.map((col) => (
+                            <td key={col.header} 
+                                className="px-4 sm:px-6 py-4 text-gray-700 whitespace-nowrap">
+                                {col.render(item)}
+                            </td>
+                            ))}
+                        </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={columns.length} className="px-4 py-6 text-center text-gray-500">
+                                No records found.
+                            </td>
+                        </tr>
+                    )}
+                 </tbody>
             </table>
         </div>
     );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table, type Column } from '../components/table';
 import type { SettlementIssueResponse } from '../types/settlementIssue.types';
-import { getUnresolvedExceptions } from '../services/settlementIssueService';
+import { getUnresolvedExceptions, resolveSettlementIssue } from '../services/settlementIssueService';
 
 function Dashboard() {
     const [unresolvedExceptions, setUnresolvedExceptions] = useState<SettlementIssueResponse[]>([]);
@@ -53,10 +53,20 @@ function Dashboard() {
             }) 
         },
         {
-            header: 'Settlement ID',
-            render:(settlementIssue) => settlementIssue.settlementId
+            header: 'Actions',
+            render:(settlementIssue) => 
+                <button 
+                    onClick={() => handleResolveSettlementIssue(settlementIssue.settlementId)}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium transition">
+                    Resolve
+                </button>
         }
     ];    
+
+    const handleResolveSettlementIssue = async (id : number) => {
+        await resolveSettlementIssue(id);
+        setUnresolvedExceptions(prev => prev.filter(issue => issue.settlementId !== id));
+    }
 
     if (loading) return (
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-center">
@@ -77,7 +87,7 @@ function Dashboard() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 tracking-tight">Welcome back, Team!</h1>
             </div>
             <div className="bg-white rounded-xl shadow-sm p-4">
-                <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 mb-6">Unreaolved Exceptions</h2>
+                <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 mb-6">Unresolved Exceptions</h2>
                 <Table data={unresolvedExceptions} columns={columns} rowKey={(settlementIssue) => settlementIssue.settlementId}/> 
             </div>
         </div>
